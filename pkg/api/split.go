@@ -69,12 +69,17 @@ func splitOutPath(outDir, fileName string, forBookmark bool, from, thru int) str
 }
 
 func writePageSpan(ctx *model.Context, from, thru int, outPath string) error {
-	ps, err := pageSpan(ctx, from, thru)
+	logWritingTo(outPath)
+	w, err := os.Create(outPath)
 	if err != nil {
 		return err
 	}
-	logWritingTo(outPath)
-	return pdfcpu.WriteReader(outPath, ps.Reader)
+	ctxNew, err := pdfcpu.ExtractPages(ctx, PagesForPageRange(from, thru), false)
+	if err != nil {
+		return err
+	}
+
+	return WriteContext(ctxNew, w)
 }
 
 func context(rs io.ReadSeeker, conf *model.Configuration) (*model.Context, error) {

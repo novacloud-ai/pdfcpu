@@ -1359,7 +1359,7 @@ func parseAndLoad(c context.Context, ctx *model.Context, line string, offset *in
 	sd, ok := o.(types.StreamDict)
 	if ok {
 		lazyLoad := false
-		if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+		if sd.Dict.IsImage() {
 			lazyLoad = true
 		}
 		if err = loadStreamDict(c, ctx, &sd, *objNr, *generation, true, lazyLoad); err != nil {
@@ -2519,7 +2519,7 @@ func decodeObjectStream(c context.Context, ctx *model.Context, objNr int) error 
 	}
 
 	lazyLoad := false
-	if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+	if sd.Dict.IsImage() {
 		lazyLoad = true
 	}
 
@@ -2694,7 +2694,7 @@ func dereferenceAndLoad(c context.Context, ctx *model.Context, objNr int, entry 
 
 	if sd, ok := o.(types.StreamDict); ok {
 		lazyLoad := false
-		if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+		if sd.Dict.IsImage() {
 			lazyLoad = true
 		}
 		if err = loadStreamDict(c, ctx, &sd, objNr, *entry.Generation, false, lazyLoad); err != nil {
