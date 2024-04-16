@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pdfcpu/pdfcpu/pkg/api"
-	"github.com/pdfcpu/pdfcpu/pkg/cli"
+	"github.com/novacloud-ai/pdfcpu/pkg/api"
+	"github.com/novacloud-ai/pdfcpu/pkg/cli"
 )
 
 func TestListBookmarks(t *testing.T) {

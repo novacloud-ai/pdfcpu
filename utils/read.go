@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
 )
 
 const (

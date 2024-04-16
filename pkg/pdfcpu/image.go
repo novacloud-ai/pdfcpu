@@ -23,10 +23,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/draw"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/draw"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 )
 
 // Images returns all embedded images of ctx.

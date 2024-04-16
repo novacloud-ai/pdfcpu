@@ -22,8 +22,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
 	"github.com/pkg/errors"
 )
 

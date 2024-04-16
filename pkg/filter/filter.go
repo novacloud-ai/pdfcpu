@@ -21,7 +21,7 @@ import (
 	"bytes"
 	"io"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
 	"github.com/pkg/errors"
 )
 

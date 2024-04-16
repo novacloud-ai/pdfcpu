@@ -22,9 +22,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/pdfcpu/pdfcpu/pkg/filter"
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/utils"
+	"github.com/novacloud-ai/pdfcpu/pkg/filter"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/utils"
 
 	"github.com/pkg/errors"
 )
