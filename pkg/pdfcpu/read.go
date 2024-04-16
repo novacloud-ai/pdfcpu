@@ -2329,7 +2329,8 @@ func loadEncodedStreamContent(c context.Context, ctx *model.Context, sd *types.S
 	}
 
 	sd.RS = ctx.Read.RS
-	if !lazyLoad {
+	sd.LazyLoad = lazyLoad
+	if !sd.LazyLoad {
 		sd.Raw = rawContent
 	}
 
