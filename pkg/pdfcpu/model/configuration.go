@@ -241,6 +241,9 @@ type Configuration struct {
 
 	// PDF Viewer is expected to supply appearance streams for form fields.
 	NeedAppearances bool
+
+	// Lazy Load
+	LazyLoad bool
 }
 
 // ConfigPath defines the location of pdfcpu's configuration directory.

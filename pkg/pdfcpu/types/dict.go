@@ -375,6 +375,10 @@ func (d Dict) IsPage() bool {
 	return d.Type() != nil && *d.Type() == "Page"
 }
 
+func (d Dict) IsImage() bool {
+	return d.Subtype() != nil && *d.Subtype() == "Image"
+}
+
 // IsObjStm returns true if given PDFDict is an object stream.
 func (d Dict) IsObjStm() bool {
 	return d.Type() != nil && *d.Type() == "ObjStm"

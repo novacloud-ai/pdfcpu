@@ -403,6 +403,15 @@ func writeStream(w *model.WriteContext, sd types.StreamDict) (int64, error) {
 		return 0, errors.Wrapf(err, "writeStream: failed to write raw content")
 	}
 
+	if sd.LazyLoad && sd.Raw == nil && sd.RS != nil {
+		if err := sd.LoadData(); err != nil {
+			return 0, errors.Wrap(err, "writeStream: loadData error")
+		}
+	}
+	if sd.Raw == nil {
+		return 0, errors.Wrapf(err, "writeStream: raw content was not read")
+	}
+
 	c, err := w.Write(sd.Raw)
 	if err != nil {
 		return 0, errors.Wrapf(err, "writeStream: failed to write raw content")
