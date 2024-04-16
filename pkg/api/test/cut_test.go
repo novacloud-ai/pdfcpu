@@ -20,9 +20,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pdfcpu/pdfcpu/pkg/api"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/api"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 )
 
 func testCut(t *testing.T, msg, inFile, outDir, outFile string, unit types.DisplayUnit, cutConf string) {

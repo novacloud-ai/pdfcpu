@@ -23,9 +23,9 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/pdfcpu/pdfcpu/pkg/font"
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/font"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 )
 
 const (
@@ -241,6 +241,9 @@ type Configuration struct {
 
 	// PDF Viewer is expected to supply appearance streams for form fields.
 	NeedAppearances bool
+
+	// Lazy Load
+	LazyLoad bool
 }
 
 // ConfigPath defines the location of pdfcpu's configuration directory.

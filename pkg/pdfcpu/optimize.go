@@ -20,11 +20,11 @@ import (
 	"bytes"
 	"sort"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	pdffont "github.com/pdfcpu/pdfcpu/pkg/pdfcpu/font"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/primitives"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	pdffont "github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/font"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/primitives"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 	"github.com/pkg/errors"
 )
 

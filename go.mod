@@ -1,4 +1,4 @@
-module github.com/pdfcpu/pdfcpu
+module github.com/novacloud-ai/pdfcpu
 
 go 1.20
 

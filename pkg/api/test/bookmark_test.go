@@ -21,10 +21,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pdfcpu/pdfcpu/pkg/api"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/color"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/api"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/color"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
 )
 
 // Acrobat Reader "Bookmarks" = Mac Preview "Table of Contents".

@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pdfcpu/pdfcpu/pkg/api"
+	"github.com/novacloud-ai/pdfcpu/pkg/api"
 )
 
 func TestInsertRemovePages(t *testing.T) {

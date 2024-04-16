@@ -17,12 +17,14 @@ limitations under the License.
 package types
 
 import (
+	"bufio"
 	"bytes"
 	"fmt"
 	"io"
 
-	"github.com/pdfcpu/pdfcpu/pkg/filter"
-	"github.com/pdfcpu/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/filter"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/utils"
 
 	"github.com/pkg/errors"
 )
@@ -45,6 +47,8 @@ type StreamDict struct {
 	//DCTImage          image.Image
 	IsPageContent bool
 	CSComponents  int
+	RS            io.ReadSeeker
+	LazyLoad      bool
 }
 
 // NewStreamDict creates a new PDFStreamDict for given PDFDict, stream offset and length.
@@ -60,6 +64,8 @@ func NewStreamDict(d Dict, streamOffset int64, streamLength *int64, streamLength
 		//nil,
 		false,
 		0,
+		nil,
+		false,
 	}
 }
 
@@ -229,8 +235,41 @@ func fixParms(f PDFFilter, parms map[string]int, sd *StreamDict) error {
 	return nil
 }
 
+// Read raw data to memory
+func (sd *StreamDict) LoadData() error {
+	var (
+		len        int = 0
+		rawContent []byte
+		rd         *bufio.Reader
+		err        error
+	)
+	newOffset := sd.StreamOffset
+	if rd, err = utils.NewPositionedReader(sd.RS, &newOffset); err != nil {
+		return err
+	}
+
+	if sd.StreamLength != nil {
+		len = int(*sd.StreamLength)
+	}
+	if rawContent, err = utils.ReadStreamContent(rd, len); err != nil {
+		return err
+	}
+	sd.Raw = rawContent
+
+	return nil
+}
+
 // Decode applies sd's filter pipeline to sd.Raw in order to produce sd.Content.
 func (sd *StreamDict) Decode() error {
+	if sd.LazyLoad && sd.Raw == nil && sd.RS != nil {
+		if err := sd.LoadData(); err != nil {
+			return errors.Wrap(err, "pdfcpu: streamDict: loadData error")
+		}
+	}
+	if sd.Raw == nil {
+		return errors.New("pdfcpu: streamDict: raw content is empty")
+	}
+
 	if sd.Content != nil {
 		// This stream has already been decoded.
 		return nil

@@ -26,11 +26,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/pdfcpu/pdfcpu/pkg/filter"
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/scan"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/filter"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/scan"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 	"github.com/pkg/errors"
 )
 
@@ -611,7 +611,7 @@ func xRefStreamDict(c context.Context, ctx *model.Context, o types.Object, objNr
 	}
 	sd := types.NewStreamDict(d, streamOffset, streamLength, streamLengthObjNr, filterPipeline)
 
-	if err = loadEncodedStreamContent(c, ctx, &sd, false); err != nil {
+	if err = loadEncodedStreamContent(c, ctx, &sd, false, false); err != nil {
 		return nil, err
 	}
 
@@ -1358,7 +1358,11 @@ func parseAndLoad(c context.Context, ctx *model.Context, line string, offset *in
 
 	sd, ok := o.(types.StreamDict)
 	if ok {
-		if err = loadStreamDict(c, ctx, &sd, *objNr, *generation, true); err != nil {
+		lazyLoad := false
+		if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+			lazyLoad = true
+		}
+		if err = loadStreamDict(c, ctx, &sd, *objNr, *generation, true, lazyLoad); err != nil {
 			return err
 		}
 		entry.Object = sd
@@ -2274,7 +2278,7 @@ func readStreamContent(rd io.Reader, streamLength int) ([]byte, error) {
 }
 
 // loadEncodedStreamContent loads the encoded stream content into sd.
-func loadEncodedStreamContent(c context.Context, ctx *model.Context, sd *types.StreamDict, fixLength bool) error {
+func loadEncodedStreamContent(c context.Context, ctx *model.Context, sd *types.StreamDict, fixLength bool, lazyLoad bool) error {
 	if log.ReadEnabled() {
 		log.Read.Printf("loadEncodedStreamContent: begin\n%v\n", sd)
 	}
@@ -2324,7 +2328,10 @@ func loadEncodedStreamContent(c context.Context, ctx *model.Context, sd *types.S
 		sd.Dict["Length"] = types.Integer(l)
 	}
 
-	sd.Raw = rawContent
+	sd.RS = ctx.Read.RS
+	if !lazyLoad {
+		sd.Raw = rawContent
+	}
 
 	if log.ReadEnabled() {
 		log.Read.Printf("loadEncodedStreamContent: end: len(streamDictRaw)=%d\n", len(sd.Raw))
@@ -2511,8 +2518,13 @@ func decodeObjectStream(c context.Context, ctx *model.Context, objNr int) error 
 		return errors.New("pdfcpu: decodeObjectStream: corrupt object stream")
 	}
 
+	lazyLoad := false
+	if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+		lazyLoad = true
+	}
+
 	// Load encoded stream content to xRefTable.
-	if err = loadEncodedStreamContent(c, ctx, &sd, false); err != nil {
+	if err = loadEncodedStreamContent(c, ctx, &sd, false, lazyLoad); err != nil {
 		return errors.Wrapf(err, "decodeObjectStream: problem dereferencing object stream %d", objNr)
 	}
 
@@ -2629,9 +2641,9 @@ func handleLinearizationParmDict(ctx *model.Context, obj types.Object, objNr int
 	return nil
 }
 
-func loadStreamDict(c context.Context, ctx *model.Context, sd *types.StreamDict, objNr, genNr int, fixLength bool) error {
+func loadStreamDict(c context.Context, ctx *model.Context, sd *types.StreamDict, objNr, genNr int, fixLength bool, lazyLoad bool) error {
 	// Load encoded stream content for stream dicts into xRefTable entry.
-	if err := loadEncodedStreamContent(c, ctx, sd, fixLength); err != nil {
+	if err := loadEncodedStreamContent(c, ctx, sd, fixLength, lazyLoad); err != nil {
 		return errors.Wrapf(err, "dereferenceObject: problem dereferencing stream %d", objNr)
 	}
 
@@ -2681,7 +2693,11 @@ func dereferenceAndLoad(c context.Context, ctx *model.Context, objNr int, entry 
 	}
 
 	if sd, ok := o.(types.StreamDict); ok {
-		if err = loadStreamDict(c, ctx, &sd, objNr, *entry.Generation, false); err != nil {
+		lazyLoad := false
+		if sd.Dict.Subtype() != nil && sd.Dict.IsImage() {
+			lazyLoad = true
+		}
+		if err = loadStreamDict(c, ctx, &sd, objNr, *entry.Generation, false, lazyLoad); err != nil {
 			return err
 		}
 		entry.Object = sd

@@ -20,8 +20,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/pdfcpu/pdfcpu/pkg/cli"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/cli"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
 )
 
 func optimizeFile(t *testing.T, fileName string, conf *model.Configuration) error {

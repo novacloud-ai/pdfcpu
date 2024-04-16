@@ -19,9 +19,9 @@ package pdfcpu
 import (
 	"fmt"
 
-	"github.com/pdfcpu/pdfcpu/pkg/log"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/model"
-	"github.com/pdfcpu/pdfcpu/pkg/pdfcpu/types"
+	"github.com/novacloud-ai/pdfcpu/pkg/log"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/model"
+	"github.com/novacloud-ai/pdfcpu/pkg/pdfcpu/types"
 	"github.com/pkg/errors"
 )
 
@@ -401,6 +401,15 @@ func writeStream(w *model.WriteContext, sd types.StreamDict) (int64, error) {
 	b, err := w.WriteString(fmt.Sprintf("%sstream%s", w.Eol, w.Eol))
 	if err != nil {
 		return 0, errors.Wrapf(err, "writeStream: failed to write raw content")
+	}
+
+	if sd.LazyLoad && sd.Raw == nil && sd.RS != nil {
+		if err := sd.LoadData(); err != nil {
+			return 0, errors.Wrap(err, "writeStream: loadData error")
+		}
+	}
+	if sd.Raw == nil {
+		return 0, errors.Wrapf(err, "writeStream: raw content was not read")
 	}
 
 	c, err := w.Write(sd.Raw)
